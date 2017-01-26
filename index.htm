@@ -1,0 +1,91 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{background-color:black;}
+div
+{
+/* transform:scaleX(-1); */
+transform:scaleY(-1);
+
+color:white;
+font-weight:bold;
+font-size:40px;
+}
+</style>
+</head>
+
+<body>
+<a download='mytrack.gpx'><div id="txt" onclick='wakelock = new Wakelock();wakelock.request(); dst=0; if(top.location.search.slice(1)>1) audio.play()' oncontextmenu='document.querySelector("a").href="data:application/gpx+xml,"+gpx+"</trkseg></trk></gpx>"'>GPS</div></a>
+
+<script>
+function Wakelock() { //Android
+  var video = document.createElement('video');
+
+  video.addEventListener('ended', function() {
+    video.play();
+  });
+
+  this.request = function() {
+    if (video.paused) {
+      video.src = "data:video/webm;base64,GkXfo0AgQoaBAUL3gQFC8oEEQvOBCEKCQAR3ZWJtQoeBAkKFgQIYU4BnQI0VSalmQCgq17FAAw9CQE2AQAZ3aGFtbXlXQUAGd2hhbW15RIlACECPQAAAAAAAFlSua0AxrkAu14EBY8WBAZyBACK1nEADdW5khkAFVl9WUDglhohAA1ZQOIOBAeBABrCBCLqBCB9DtnVAIueBAKNAHIEAAIAwAQCdASoIAAgAAUAmJaQAA3AA/vz0AAA="
+      video.play();
+    }
+  };
+
+  this.release = function() {
+    video.pause();
+    video.src = '';
+  };
+}
+
+    var accur = false;
+    if (top.location.search.slice(1)) accur = true // == 1 //?1 HighAccuracy
+
+    if (top.location.search.slice(1) == 1) document.getElementById("txt").style.transform="none" //?1 none scale
+if(isNaN(top.location.search.slice(1))) document.getElementById("txt").style.color=decodeURIComponent(top.location.search.slice(1))  // %23
+else if(top.location.search.slice(1) > 1) {var audio=new Audio(); audio.src="https://upload.wikimedia.org/wikipedia/commons/0/05/Beep-09.ogg"} //edit here  //?120
+
+var time0=new Date(), dst=0  //0
+var gpx = '<?xml version="1.0" encoding="UTF-8"?>%0D%0A<gpx xmlns="http://www.topografix.com/GPX/1/1" creator="dj" version="1.1"><trk><name>test</name><trkseg>%0D%0A', trkpt0, speed0=0
+//
+
+    navigator.geolocation.watchPosition(showPosition, function(err) {
+      alert(err.message)
+    }, {
+      enableHighAccuracy: accur,
+      timeout: 50000,
+      maximumAge: 0
+    }); //getCurrent
+
+function showPosition(position) {
+  var time=new Date(); dst+=position.coords.speed*(time-time0)/1000/1000; time0=time
+document.getElementById("txt").innerHTML = 
+ '<span style="font-size:20px;">'+position.coords.altitude+' m</span>'
++ '<br>'+Math.round(position.coords.speed * 3.6)  // km/h
++ '<br><span style="font-size:20px;">'+dst.toFixed(1)+' km</span>'
+
+var trkpt = '<trkpt lat="' + position.coords.latitude + '" lon="' + position.coords.longitude + '">'
+if (trkpt != trkpt0) {gpx += trkpt + '</trkpt>%0D%0A'; trkpt0=trkpt}
+
+if (top.location.search.slice(1)>1 && position.coords.speed*3.6>=top.location.search.slice(1) && speed0*3.6<top.location.search.slice(1)) audio.play(); speed0=position.coords.speed
+}
+
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('sw.js').then(function(registration) {
+      // Registration was successful
+      console.log('ServiceWorker registration successful with scope: ', registration.scope);
+    }).catch(function(err) {
+      // registration failed :(
+      console.log('ServiceWorker registration failed: ', err);  //origin ('null') is not supported  //Failed to register a ServiceWorker  //successful
+    });
+  });
+}
+
+
+</script>
+
+</body>
+</html>

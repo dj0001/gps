@@ -1,0 +1,15 @@
+{
+	"short_name": "GPS",
+	"name": "GPS Tacho",
+	"display": "standalone",
+	"icons": [
+		{
+			"src": "icon.png",
+			"sizes": "128x128",
+			"type": "image/png"
+		}
+	],
+	"start_url": ".",
+	"theme_color": "#5ac1f2",
+	"background_color": "#383838"
+}

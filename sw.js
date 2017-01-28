@@ -103,7 +103,7 @@ self.addEventListener('activate', function(event) {
 'use strict';
 
 const version = 'v1.01';
-const staticCachePrefix = 'wave-pd1-static-';
+const staticCachePrefix = 'gps-pd1-static-';
 const staticCacheName = staticCachePrefix + version;
 
 self.addEventListener('install', event => {

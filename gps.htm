@@ -58,6 +58,8 @@ document.getElementById("txt").innerHTML =
  '<span style="font-size:20px;">'+position.coords.altitude+' m</span>'
 + '<br>'+Math.round(position.coords.speed * 3.6)  // km/h
 + '<br><span style="font-size:20px;">'+dst.toFixed(1)+' km</span>'
++ '<br><span style="font-size:20px;">'+position.coords.latitude+' N</span>'
++ '<br><span style="font-size:20px;">'+position.coords.longitude+' S</span>'
 var trkpt = '<trkpt lat="' + position.coords.latitude + '" lon="' + position.coords.longitude + '">'
 if (trkpt != trkpt0) {gpx += trkpt + '</trkpt>%0D%0A'; trkpt0=trkpt}
 if (top.location.search.slice(1)>1 && position.coords.speed*3.6>=top.location.search.slice(1) && speed0*3.6<top.location.search.slice(1)) audio.play(); speed0=position.coords.speed

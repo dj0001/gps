@@ -21,8 +21,8 @@ font-size:40px;
 <a download='mytrack.gpx'><div id="txt" onclick='wakelock = new Wakelock();wakelock.request(); dst=0; if(top.location.search.slice(1)>1) audio.play()' oncontextmenu='document.querySelector("a").href="data:application/gpx+xml,"+gpx+"</trkseg></trk></gpx>"'>GPS</div></a>
 
 <script>
-function geo2gk(lp, bp)
-{
+function geo2gk(obj)  //lp, bp
+{ lp=obj.lp; bp=obj.bp
 /* Copyright (c) 2006, HELMUT H. HEIMEIER
    Permission is hereby granted, free of charge, to any person obtaining a
    copy of this software and associated documentation files (the "Software"),
@@ -165,7 +165,7 @@ document.getElementById("txt").innerHTML =
 + '<br><span style="font-size:20px;">'+position.coords.longitude+' S</span>'
 + '<br><a href="https://www.deine-berge.de/Rechner/Koordinaten/Dezimal/'+position.coords.latitude+','+position.coords.longitude+'" target="gk" style="font-size:20px;">Gauß-Krüger</a>'
 + '<br><a href="https://tools.retorte.ch/map/?wgs84='+position.coords.latitude+','+position.coords.longitude+'" target="gk" style="font-size:20px;">Gauß-Krüger (Ch)</a>'
-+ '<br><span style="font-size:20px;">'+geo2gk(position.coords.longitude,position.coords.latitude)+' R,H</span>'
++ '<br><span style="font-size:20px;">'+geo2gk({lp:position.coords.longitude,bp:position.coords.latitude})+' R,H</span>'  //position.coords.longitude,position.coords.latitude
 var trkpt = '<trkpt lat="' + position.coords.latitude + '" lon="' + position.coords.longitude + '">'
 if (trkpt != trkpt0) {gpx += trkpt + '</trkpt>%0D%0A'; trkpt0=trkpt}
 if (top.location.search.slice(1)>1 && position.coords.speed*3.6>=top.location.search.slice(1) && speed0*3.6<top.location.search.slice(1)) audio.play(); speed0=position.coords.speed

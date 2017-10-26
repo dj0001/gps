@@ -21,6 +21,95 @@ font-size:40px;
 <a download='mytrack.gpx'><div id="txt" onclick='wakelock = new Wakelock();wakelock.request(); dst=0; if(top.location.search.slice(1)>1) audio.play()' oncontextmenu='document.querySelector("a").href="data:application/gpx+xml,"+gpx+"</trkseg></trk></gpx>"'>GPS</div></a>
 
 <script>
+function wgs2pot(lw, bw)
+{
+/* Copyright (c) 2006, HELMUT H. HEIMEIER
+   Permission is hereby granted, free of charge, to any person obtaining a
+   copy of this software and associated documentation files (the "Software"),
+   to deal in the Software without restriction, including without limitation
+   the rights to use, copy, modify, merge, publish, distribute, sublicense,
+   and/or sell copies of the Software, and to permit persons to whom the
+   Software is furnished to do so, subject to the following conditions:
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.*/
+
+/* Die Funktion verschiebt das Kartenbezugssystem (map datum) vom
+   WGS84 Datum (World Geodetic System 84) zum in Deutschland
+   gebräuchlichen Potsdam-Datum. Geographische Länge lw und Breite
+   bw gemessen in grad auf dem WGS84 Ellipsoid müssen
+   gegeben sein. Ausgegeben werden geographische Länge lp
+   und Breite bp (in grad) auf dem Bessel-Ellipsoid.
+   Bei der Transformation werden die Ellipsoidachsen parallel
+   verschoben um dx = -587 m, dy = -16 m und dz = -393 m.*/
+
+// Geographische Länge lw und Breite bw im WGS84 Datum
+   if (lw == "" || bw == "")
+   {
+   lp = "";
+   bp = "";
+   return;
+   }
+   lw = parseFloat(lw);
+   bw = parseFloat(bw);
+
+// Quellsystem WGS84 Datum
+// Große Halbachse a und Abplattung fq
+   a = 6378137.000;
+   fq = 3.35281066e-3;
+
+// Zielsystem Potsdam Datum
+// Abplattung f
+   f = fq - 1.003748e-5
+
+// Parameter für datum shift
+   dx = -587;
+   dy = -16;
+   dz = -393;
+
+// Quadrat der ersten numerischen Exzentrizität in Quell- und Zielsystem
+   e2q = (2*fq-fq*fq);
+   e2 = (2*f-f*f);
+
+// Breite und Länge in Radianten
+   pi = Math.PI;
+   b1 = bw * (pi/180);
+   l1 = lw * (pi/180);
+
+// Querkrümmungshalbmesser nd
+   nd = a/Math.sqrt(1 - e2q*Math.sin(b1)*Math.sin(b1));
+
+// Kartesische Koordinaten des Quellsystems WGS84
+   xw = nd*Math.cos(b1)*Math.cos(l1);
+   yw = nd*Math.cos(b1)*Math.sin(l1);
+   zw = (1 - e2q)*nd*Math.sin(b1);
+
+//  Kartesische Koordinaten des Zielsystems (datum shift) Potsdam
+   x = xw + dx;
+   y = yw + dy;
+   z = zw + dz;
+
+// Berechnung von Breite und Länge im Zielsystem
+   rb = Math.sqrt(x*x + y*y);
+   b2 = (180/pi) * Math.atan((z/rb)/(1-e2));
+
+   if (x > 0)
+     l2 = (180/pi) * Math.atan(y/x);
+   if (x < 0 && y > 0)
+     l2 = (180/pi) * Math.atan(y/x) + 180;
+   if (x < 0 && y < 0)
+     l2 = (180/pi) * Math.atan(y/x) - 180;
+
+   lp = l2;
+   bp = b2;
+
+   if (lp < 5 || lp > 16 || bp < 46 || bp > 56)
+   {
+   lp = "";
+   bp = "";
+   }
+   return {lp,bp} //return;
+}
+
 function geo2gk(obj)  //lp, bp
 { lp=obj.lp; bp=obj.bp
 /* Copyright (c) 2006, HELMUT H. HEIMEIER
@@ -166,6 +255,7 @@ document.getElementById("txt").innerHTML =
 + '<br><a href="https://www.deine-berge.de/Rechner/Koordinaten/Dezimal/'+position.coords.latitude+','+position.coords.longitude+'" target="gk" style="font-size:20px;">Gauß-Krüger</a>'
 + '<br><a href="https://tools.retorte.ch/map/?wgs84='+position.coords.latitude+','+position.coords.longitude+'" target="gk" style="font-size:20px;">Gauß-Krüger (Ch)</a>'
 + '<br><span style="font-size:20px;">'+geo2gk({lp:position.coords.longitude,bp:position.coords.latitude})+' R,H</span>'  //position.coords.longitude,position.coords.latitude
++ '<br><span style="font-size:20px;">'+geo2gk(wgs2pot(position.coords.longitude,position.coords.latitude))+' R,H</span>'  //translate
 var trkpt = '<trkpt lat="' + position.coords.latitude + '" lon="' + position.coords.longitude + '">'
 if (trkpt != trkpt0) {gpx += trkpt + '</trkpt>%0D%0A'; trkpt0=trkpt}
 if (top.location.search.slice(1)>1 && position.coords.speed*3.6>=top.location.search.slice(1) && speed0*3.6<top.location.search.slice(1)) audio.play(); speed0=position.coords.speed

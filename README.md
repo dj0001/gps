@@ -8,4 +8,4 @@ longtouch to download gpx track
 
 querystring-parameter ?1 disable hud, ?color, ?120 speed warning
 
-update: gps.htm shows gauss-krueger
+update: gps.htm?1 shows gauss-krueger

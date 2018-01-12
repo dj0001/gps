@@ -55,7 +55,7 @@
 	map.on('locationfound', onclick);  //onLocationFound
 	//map.on('locationerror', onLocationError);
 
-	map.locate({setView: true, maxZoom: 16, watch: true});
+	map.locate({setView: true, maxZoom: 16, watch: true, enableHighAccuracy: true});
 
 var gpx = {
     "type": "LineString",

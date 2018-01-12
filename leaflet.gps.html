@@ -24,12 +24,13 @@
 		}
 	</style>
 
-	<style>body { padding: 0; margin: 0; } #map { height: 100%; width: 100vw; }</style>
+	<style>body { padding: 0; margin: 0; } #map { height: 100%; width: 90vw; }</style>  <!-- 100vw-->
 </head>
 <body>
 
 <div id='map'></div>
-
+<a download='mytrack.json' onclick='this.href="data:application/geo+json,"+JSON.stringify(gpx)'>dl</a>
+	
 <script>
 	var map = L.map('map',{center: [48.37, 10.89],zoom: 12})  //.fitWorld();
 

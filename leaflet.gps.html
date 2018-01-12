@@ -12,26 +12,15 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ==" crossorigin=""/>
     <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js" integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log==" crossorigin=""></script>
 
-
-	<style>
-		html, body {
-			height: 100%;
-			margin: 0;
-		}
-		#map {
-			width: 600px;
-			height: 400px;
-		}
-	</style>
-
-	<style>body { padding: 0; margin: 0; } #map { height: 100%; width: 90vw; }</style>  <!-- 100vw-->
+	
 </head>
 <body>
 
-<div id='map'></div>
+<div id='map' style="width: 98vw; height: 100vh;"></div>  <!-- height: 100%; width: 90vw; -->
 <a download='mytrack.json' onclick='this.href="data:application/geo+json,"+JSON.stringify(gpx)'>dl</a>
 	
 <script>
+	var lng0  //prevent duplikates
 	var map = L.map('map',{center: [48.37, 10.89],zoom: 12})  //.fitWorld();
 
 	L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
@@ -68,7 +57,7 @@ var myLayer = L.geoJSON().addTo(map);
 
 	
 	map.on('click',onclick)
-	function onclick(e) {gpx.coordinates.push([e.latlng.lng,e.latlng.lat]); myLayer.addData(gpx);}  //console.log(gpx.coordinates); 
+	function onclick(e) {if(e.latlng.lng!=lng0) {lng0=e.latlng.lng; gpx.coordinates.push([e.latlng.lng,e.latlng.lat]); myLayer.addData(gpx);}}
 </script>
 </body>
 </html>

@@ -57,7 +57,7 @@ var myLayer = L.geoJSON().addTo(map);
 
 	
 	map.on('click',onclick)
-	function onclick(e) {if(e.latlng.lng!=lng0) {lng0=e.latlng.lng; gpx.coordinates.push([e.latlng.lng,e.latlng.lat]); myLayer.addData(gpx);}}
+	function onclick(e) {if(e.latlng.lng!=lng0) {lng0=e.latlng.lng; gpx.coordinates.push([e.latlng.lng,e.latlng.lat]); myLayer.addData(gpx); map.panTo([e.latlng.lat,e.latlng.lng])}}  //pan
 </script>
 </body>
 </html>
